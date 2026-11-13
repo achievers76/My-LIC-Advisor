@@ -224,7 +224,112 @@
       </div>
     </div>
   </div>
+  <!-- 3. प्रीमियम डैशबोर्ड (एक ही स्क्रीन पर बिना स्क्रॉल के सभी टूल्स) -->
+  <div id="view-dashboard" class="hidden-view h-screen flex flex-col justify-between overflow-hidden bg-slate-100">
+    
+    <!-- कॉम्पैक्ट VIP हेडर कार्ड -->
+    <div class="royal-gradient text-white px-4 pt-3.5 pb-4 rounded-b-3xl shadow-lg border-b-2 border-amber-400 shrink-0">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <img id="dash-avatar" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+            class="w-12 h-12 rounded-full object-cover border-2 border-amber-400 bg-white shadow" />
+          <div>
+            <h2 id="dash-name" class="font-black text-base leading-tight">एजेंट नाम</h2>
+            <p id="dash-meta" class="text-[11px] text-amber-300 font-bold">कोड: DEMO123 • LIC सलाहकार</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button onclick="openEditProfile()" class="px-2.5 py-1.5 bg-white/15 rounded-xl text-[11px] font-extrabold border border-white/20">✏️ एडिट</button>
+          <button onclick="logoutAgent()" class="px-2.5 py-1.5 bg-red-500/25 rounded-xl text-[11px] font-extrabold border border-red-300/30">🚪</button>
+        </div>
+      </div>
 
+      <!-- कॉम्पैक्ट अलर्ट पट्टी -->
+      <div class="mt-2.5 bg-amber-400/20 border border-amber-300/40 rounded-xl px-3 py-1.5 flex items-center justify-between">
+        <span class="text-xs font-extrabold text-amber-100">🔔 आज के रिन्यूअल व बर्थडे अलर्ट</span>
+        <button onclick="openModule('crm')" class="gold-gradient text-slate-950 font-black text-[11px] px-2.5 py-1 rounded-lg shadow">देखें ➔</button>
+      </div>
+    </div>
+
+    <!-- सभी 6 मुख्य टूल्स (एक स्क्रीन पर फिट) -->
+    <div class="flex-1 px-3.5 py-2.5 flex flex-col justify-center">
+      <div class="grid grid-cols-2 gap-2.5 h-full max-h-[540px]">
+        
+        <!-- टूल 1 -->
+        <button onclick="openModule('calc')" class="bg-white p-3 rounded-2xl card-shadow border border-blue-200 text-left active:scale-95 transition flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 text-white flex items-center justify-center text-xl shadow">🧮</div>
+            <span class="text-[10px] font-black text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full">28 प्लान</span>
+          </div>
+          <div class="mt-1">
+            <h4 class="font-black text-sm text-slate-900 leading-tight">प्रीमियम व मैच्योरिटी</h4>
+            <p class="text-[10px] font-semibold text-slate-500 mt-0.5">साल-दर-साल चार्ट + PDF</p>
+          </div>
+        </button>
+
+        <!-- टूल 2 -->
+        <button onclick="openModule('compare')" class="bg-white p-3 rounded-2xl card-shadow border border-amber-200 text-left active:scale-95 transition flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white flex items-center justify-center text-xl shadow">⚖️</div>
+            <span class="text-[10px] font-black text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">4-तरफा</span>
+          </div>
+          <div class="mt-1">
+            <h4 class="font-black text-sm text-slate-900 leading-tight">पॉलिसी व FD तुलना</h4>
+            <p class="text-[10px] font-semibold text-slate-500 mt-0.5">LIC, FD व पोस्ट ऑफिस</p>
+          </div>
+        </button>
+
+        <!-- टूल 3 -->
+        <button onclick="openModule('combo')" class="bg-white p-3 rounded-2xl card-shadow border border-emerald-200 text-left active:scale-95 transition flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 text-white flex items-center justify-center text-xl shadow">🎁</div>
+            <span class="text-[10px] font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">कन्यादान</span>
+          </div>
+          <div class="mt-1">
+            <h4 class="font-black text-sm text-slate-900 leading-tight">कॉम्बो प्लान बिल्डर</h4>
+            <p class="text-[10px] font-semibold text-slate-500 mt-0.5">पेंशन व शिक्षा पैकेज</p>
+          </div>
+        </button>
+
+        <!-- टूल 4 -->
+        <button onclick="openModule('poster')" class="bg-white p-3 rounded-2xl card-shadow border border-purple-200 text-left active:scale-95 transition flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-700 text-white flex items-center justify-center text-xl shadow">🎨</div>
+            <span class="text-[10px] font-black text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full">ब्रांडिंग</span>
+          </div>
+          <div class="mt-1">
+            <h4 class="font-black text-sm text-slate-900 leading-tight">पोस्टर मेकर</h4>
+            <p class="text-[10px] font-semibold text-slate-500 mt-0.5">फोटो व नंबर वाले कार्ड्स</p>
+          </div>
+        </button>
+
+        <!-- टूल 5 -->
+        <button onclick="openModule('crm')" class="bg-white p-3 rounded-2xl card-shadow border border-rose-200 text-left active:scale-95 transition flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 to-pink-700 text-white flex items-center justify-center text-xl shadow">👨‍👩‍👧‍👦</div>
+            <span class="text-[10px] font-black text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full">360° CRM</span>
+          </div>
+          <div class="mt-1">
+            <h4 class="font-black text-sm text-slate-900 leading-tight">फैमिली पोर्टफोलियो</h4>
+            <p class="text-[10px] font-semibold text-slate-500 mt-0.5">पॉलिसी व रिमाइंडर</p>
+          </div>
+        </button>
+
+        <!-- टूल 6 -->
+        <button onclick="openModule('objection')" class="bg-white p-3 rounded-2xl card-shadow border border-cyan-200 text-left active:scale-95 transition flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-sky-700 text-white flex items-center justify-center text-xl shadow">🗣️</div>
+            <span class="text-[10px] font-black text-cyan-700 bg-cyan-50 px-2 py-0.5 rounded-full">स्क्रिप्ट्स</span>
+          </div>
+          <div class="mt-1">
+            <h4 class="font-black text-sm text-slate-900 leading-tight">ऑब्जेक्शन हैंडलर</h4>
+            <p class="text-[10px] font-semibold text-slate-500 mt-0.5">बहाने व सटीक जवाब</p>
+          </div>
+        </button>
+
+      </div>
+    </div>
+  </div>
   <!-- 4. डायनामिक मॉड्यूल कंटेनर -->
   <div id="view-module" class="hidden-view min-h-screen bg-slate-100 pb-16">
     <div class="royal-gradient text-white p-4 sticky top-0 z-20 flex items-center gap-3 shadow-md border-b-2 border-amber-400">
