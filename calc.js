@@ -17,12 +17,12 @@ function renderModule(mod) {
   }
 }
 
-// 1. प्रीमियम और साल-दर-साल कैलकुलेटर UI
+// 1. लाइव ऑटो-अपडेट प्रीमियम और साल-दर-साल कैलकुलेटर
 function renderCalculatorUI(container) {
   let planOptions = LIC_PLANS.map(p => `<option value="${p.no}">${p.no} - ${p.name}</option>`).join('');
   let riderChecks = LIC_RIDERS.map(r => `
     <label class="flex items-center gap-2 text-xs bg-slate-50 p-2 rounded-lg border">
-      <input type="checkbox" value="${r.id}" class="calc-rider accent-blue-700" />
+      <input type="checkbox" value="${r.id}" onchange="calculateYearByYear()" class="calc-rider accent-blue-700" />
       <span>${r.name}</span>
     </label>`).join('');
 
@@ -30,7 +30,8 @@ function renderCalculatorUI(container) {
     <div class="bg-white p-4 rounded-2xl shadow-sm space-y-3">
       <div>
         <label class="text-xs font-bold text-slate-600">ग्राहक का नाम</label>
-        <input type="text" id="calc-client" value="श्री अमित वर्मा" class="w-full mt-1 px-3 py-2 border rounded-xl text-sm font-semibold" />
+        <input type="text" id="calc-client" value="श्री अमित वर्मा" oninput="calculateYearByYear()"
+          class="w-full mt-1 px-3 py-2 border rounded-xl text-sm font-semibold" />
       </div>
       <div>
         <label class="text-xs font-bold text-slate-600">LIC प्लान चुनें (सभी 28 प्लान)</label>
@@ -42,29 +43,33 @@ function renderCalculatorUI(container) {
       <div class="grid grid-cols-2 gap-3">
         <div>
           <label class="text-xs font-bold text-slate-600">ग्राहक की उम्र (वर्ष)</label>
-          <input type="number" id="calc-age" value="30" class="w-full mt-1 px-3 py-2 border rounded-xl text-sm font-bold" />
+          <input type="number" id="calc-age" value="30" min="0" max="75" oninput="calculateYearByYear()"
+            class="w-full mt-1 px-3 py-2 border rounded-xl text-sm font-bold bg-amber-50/50" />
         </div>
         <div>
           <label class="text-xs font-bold text-slate-600">बीमा राशि (Sum Assured)</label>
-          <input type="number" id="calc-sa" value="1000000" step="50000" class="w-full mt-1 px-3 py-2 border rounded-xl text-sm font-bold" />
+          <input type="number" id="calc-sa" value="1000000" step="50000" oninput="calculateYearByYear()"
+            class="w-full mt-1 px-3 py-2 border rounded-xl text-sm font-bold" />
         </div>
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div>
           <label class="text-xs font-bold text-slate-600">पॉलिसी अवधि (Term)</label>
-          <input type="number" id="calc-term" value="25" class="w-full mt-1 px-3 py-2 border rounded-xl text-sm font-bold" />
+          <input type="number" id="calc-term" value="25" min="5" max="60" oninput="calculateYearByYear()"
+            class="w-full mt-1 px-3 py-2 border rounded-xl text-sm font-bold" />
         </div>
         <div>
           <label class="text-xs font-bold text-slate-600">प्रीमियम अवधि (PPT)</label>
-          <input type="number" id="calc-ppt" value="16" class="w-full mt-1 px-3 py-2 border rounded-xl text-sm font-bold" />
+          <input type="number" id="calc-ppt" value="16" min="1" max="50" oninput="calculateYearByYear()"
+            class="w-full mt-1 px-3 py-2 border rounded-xl text-sm font-bold" />
         </div>
       </div>
       <div>
         <label class="text-xs font-bold text-slate-600 mb-1 block">अतिरिक्त सुरक्षा राइडर्स जोड़ें:</label>
         <div class="space-y-1.5">${riderChecks}</div>
       </div>
-      <button onclick="calculateYearByYear()" class="w-full py-3.5 rounded-xl font-bold text-white royal-gradient shadow-md active:scale-95 transition">
-        साल-दर-साल चार्ट देखें 📊
+      <button onclick="calculateYearByYear()" class="w-full py-3 rounded-xl font-bold text-white royal-gradient shadow-md active:scale-95 transition">
+        साल-दर-साल चार्ट रीफ्रेश करें 📊
       </button>
     </div>
     <div id="calc-result-area" class="mt-4"></div>
@@ -79,31 +84,41 @@ function onCalcPlanChange() {
   document.getElementById('calc-term').value = plan.defaultTerm;
   document.getElementById('calc-ppt').value = plan.defaultPpt;
   document.getElementById('calc-plan-desc').innerText = plan.desc;
+  calculateYearByYear(); // प्लान बदलते ही तुरंत कैलकुलेट करें
 }
 
 function calculateYearByYear() {
   const client = document.getElementById('calc-client').value || 'सम्मानित ग्राहक';
   const no = document.getElementById('calc-plan').value;
   const plan = LIC_PLANS.find(p => p.no === no);
-  const age = parseInt(document.getElementById('calc-age').value) || 30;
-  const sa = parseInt(document.getElementById('calc-sa').value) || 1000000;
-  const term = parseInt(document.getElementById('calc-term').value) || plan.defaultTerm;
-  const ppt = parseInt(document.getElementById('calc-ppt').value) || plan.defaultPpt;
+  if (!plan) return;
+
+  const age = Math.max(0, Math.min(75, parseInt(document.getElementById('calc-age').value) || 30));
+  const sa = Math.max(50000, parseInt(document.getElementById('calc-sa').value) || 1000000);
+  const term = Math.max(1, parseInt(document.getElementById('calc-term').value) || plan.defaultTerm);
+  let ppt = Math.max(1, parseInt(document.getElementById('calc-ppt').value) || plan.defaultPpt);
+  if (ppt > term && !plan.type.startsWith('wholelife')) ppt = term;
+
+  // उम्र और अवधि (Term/PPT) के अनुसार डायनामिक प्रीमियम समायोजन
+  const ageFactor = 1 + Math.max(0, (age - 25) * 0.014);
+  const termFactor = (plan.type === 'single') ? 1 : (plan.defaultTerm / term) * 0.65 + 0.35;
+  const pptFactor = (plan.type === 'single') ? 1 : (plan.defaultPpt / ppt) * 0.70 + 0.30;
 
   let riderRate = 0;
   document.querySelectorAll('.calc-rider:checked').forEach(cb => {
     const r = LIC_RIDERS.find(x => x.id === cb.value);
-    if (r) riderRate += r.ratePerThousand;
+    if (r) riderRate += r.ratePerThousand * ageFactor;
   });
 
-  const basePrem = (sa / 1000) * (plan.rate + riderRate);
+  const adjustedBaseRate = plan.rate * ageFactor * termFactor * pptFactor;
+  const basePrem = (sa / 1000) * (adjustedBaseRate + riderRate);
   const gst = basePrem * 0.045;
   const firstYrPrem = Math.round(basePrem + gst);
   const totalPaid = firstYrPrem * ppt;
 
   let rowsHTML = '';
   let totalReturn = 0;
-  const displayYears = (plan.type.startsWith('wholelife')) ? Math.max(term, 100 - age) : term;
+  const displayYears = plan.type.startsWith('wholelife') ? Math.max(term, 100 - age) : term;
 
   for (let yr = 1; yr <= displayYears; yr++) {
     const curAge = age + yr - 1;
@@ -127,19 +142,22 @@ function calculateYearByYear() {
     rowsHTML += `
       <tr class="border-b text-[11px] ${payout > 0 ? 'bg-emerald-50 font-bold text-emerald-900' : 'bg-white'}">
         <td class="p-2 text-center">${yr}</td>
-        <td class="p-2 text-center">${curAge}</td>
+        <td class="p-2 text-center font-semibold">${curAge} वर्ष</td>
         <td class="p-2 text-right">${premThisYr > 0 ? formatINR(premThisYr) : '₹ 0'}</td>
         <td class="p-2 text-right text-blue-800">${formatINR(normalCover)}</td>
         <td class="p-2 text-right ${payout > 0 ? 'text-emerald-700' : 'text-slate-400'}">${payout > 0 ? formatINR(payout) : '-'}</td>
       </tr>`;
   }
 
-  const shareText = `*LIC पॉलिसी कोटेशन - ${client}*\nप्लान: ${plan.no} - ${plan.name}\nबीमा राशि: ${formatINR(sa)}\nसालाना प्रीमियम: ${formatINR(firstYrPrem)} (${ppt} वर्ष)\nकुल अनुमानित लाभ (टैक्स-फ्री): ${formatINR(totalReturn)}\n\nसंपर्क करें: ${currentAgent.name} (${currentAgent.phone})`;
+  const shareText = `*LIC पॉलिसी कोटेशन - ${client}*\nउम्र: ${age} वर्ष | अवधि: ${term} वर्ष | PPT: ${ppt} वर्ष\nप्लान: ${plan.no} - ${plan.name}\nबीमा राशि: ${formatINR(sa)}\nसालाना प्रीमियम: ${formatINR(firstYrPrem)}\nकुल अनुमानित लाभ (टैक्स-फ्री): ${formatINR(totalReturn)}\n\nसंपर्क करें: ${currentAgent.name} (${currentAgent.phone})`;
 
   document.getElementById('calc-result-area').innerHTML = `
     <div id="printable-quote" class="bg-white p-4 rounded-2xl shadow-md border border-blue-100 space-y-3">
       <div class="royal-gradient text-white p-3.5 rounded-xl">
-        <div class="text-xs text-amber-300 font-bold">व्यक्तिगत बीमा प्रस्ताव: ${client}</div>
+        <div class="flex justify-between items-center text-xs text-amber-300 font-bold">
+          <span>प्रस्ताव: ${client} (उम्र: ${age} वर्ष)</span>
+          <span>अवधि: ${term}/${ppt} वर्ष</span>
+        </div>
         <div class="text-base font-extrabold mt-0.5">${plan.no} - ${plan.name}</div>
         <div class="grid grid-cols-3 gap-2 mt-3 bg-white/10 p-2.5 rounded-lg text-center">
           <div><div class="text-[10px] text-blue-200">सालाना प्रीमियम</div><div class="text-xs font-bold">${formatINR(firstYrPrem)}</div></div>
@@ -176,171 +194,211 @@ function calculateYearByYear() {
       </div>
     </div>`;
 }
-// 2. पॉलिसी बनाम बैंक FD / पोस्ट ऑफिस / सरकारी योजना तुलना UI
+
+// 2. LIC बनाम अन्य LIC प्लान + बैंक FD + पोस्ट ऑफिस / सरकारी योजनाओं की तुलना
 function renderCompareUI(container) {
   let planOptions = LIC_PLANS.map(p => `<option value="${p.no}">${p.no} - ${p.name}</option>`).join('');
-  let plan2Options = `<option value="NONE">-- कोई नहीं (सिर्फ LIC बनाम FD/PO देखें) --</option>` + planOptions;
-
   container.innerHTML = `
     <div class="bg-white p-4 rounded-2xl shadow-sm space-y-3">
+      <div class="grid grid-cols-2 gap-2.5">
+        <div>
+          <label class="text-[11px] font-bold text-blue-800">LIC प्लान 1 (मुख्य)</label>
+          <select id="cmp-p1" onchange="runFullComparison()" class="w-full mt-1 p-2 border rounded-xl text-xs font-bold bg-blue-50">${planOptions}</select>
+        </div>
+        <div>
+          <label class="text-[11px] font-bold text-indigo-800">LIC प्लान 2 (वैकल्पिक)</label>
+          <select id="cmp-p2" onchange="runFullComparison()" class="w-full mt-1 p-2 border rounded-xl text-xs font-bold bg-indigo-50">${planOptions}</select>
+        </div>
+      </div>
+
       <div>
-        <label class="text-xs font-bold text-slate-600">1. मुख्य LIC प्लान चुनें</label>
-        <select id="cmp-plan1" class="w-full mt-1 px-3 py-2 border rounded-xl text-sm font-bold bg-blue-50 text-blue-900">
-          ${planOptions}
+        <label class="text-[11px] font-bold text-amber-800">पोस्ट ऑफिस / सरकारी योजना चुनें (तुलना हेतु):</label>
+        <select id="cmp-govt" onchange="runFullComparison()" class="w-full mt-1 p-2.5 border rounded-xl text-xs font-bold bg-amber-50 text-amber-900">
+          <option value="ppf">पोस्ट ऑफिस / बैंक PPF (7.1% ब्याज • 15 वर्ष लॉक-इन • शून्य बीमा)</option>
+          <option value="ssy">सुकन्या समृद्धि योजना SSY (8.2% ब्याज • केवल बेटी हेतु • शून्य बीमा)</option>
+          <option value="nsc">पोस्ट ऑफिस NSC / टाइम डिपॉजिट (7.7% ब्याज • ब्याज पर टैक्स • शून्य बीमा)</option>
+          <option value="kvp">किसान विकास पत्र KVP (7.5% ब्याज • 115 माह में दोगुना • शून्य बीमा)</option>
         </select>
       </div>
-      <div>
-        <label class="text-xs font-bold text-slate-600">2. दूसरा LIC प्लान (वैकल्पिक तुलना हेतु)</label>
-        <select id="cmp-plan2" class="w-full mt-1 px-3 py-2 border rounded-xl text-sm bg-slate-50">
-          ${plan2Options}
-        </select>
-      </div>
-      <div>
-        <label class="text-xs font-bold text-slate-600">3. तुलना करने के लिए सरकारी / बैंक विकल्प चुनें</label>
-        <select id="cmp-govt" class="w-full mt-1 px-3 py-2 border rounded-xl text-sm font-bold bg-amber-50 text-amber-900">
-          <option value="FD">बैंक FD (7.0% ब्याज - 30% टैक्स स्लैब के बाद 4.9%)</option>
-          <option value="PPF">पोस्ट ऑफिस PPF (7.1% - 15 साल लॉक-इन, कोई बीमा कवर नहीं)</option>
-          <option value="SSY">सुकन्या समृद्धि योजना SSY (8.2% - केवल बेटी हेतु, 21 साल लॉक-इन)</option>
-          <option value="NSC">पोस्ट ऑफिस NSC (7.7% ब्याज - मैच्योरिटी पर ब्याज टैक्स योग्य)</option>
-          <option value="KVP">किसान विकास पत्र KVP (7.5% ब्याज - कोई टैक्स छूट नहीं, कोई बीमा नहीं)</option>
-        </select>
-      </div>
+
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label class="text-xs font-bold text-slate-600">सालाना निवेश बजट (₹)</label>
-          <input type="number" id="cmp-budget" value="50000" step="5000" class="w-full mt-1 px-3 py-2 border rounded-xl text-sm font-bold" />
+          <label class="text-[11px] font-bold text-slate-600">सालाना निवेश बजट (₹)</label>
+          <input type="number" id="cmp-budget" value="50000" step="5000" oninput="runFullComparison()" class="w-full mt-1 p-2 border rounded-xl text-sm font-bold" />
         </div>
         <div>
-          <label class="text-xs font-bold text-slate-600">अवधि (वर्ष)</label>
-          <input type="number" id="cmp-years" value="15" class="w-full mt-1 px-3 py-2 border rounded-xl text-sm font-bold" />
+          <label class="text-[11px] font-bold text-slate-600">अवधि (वर्ष)</label>
+          <input type="number" id="cmp-term" value="20" min="5" max="40" oninput="runFullComparison()" class="w-full mt-1 p-2 border rounded-xl text-sm font-bold" />
         </div>
       </div>
-      <button onclick="runComparison()" class="w-full py-3.5 rounded-xl font-bold text-white royal-gradient shadow-md active:scale-95 transition">
-        तुलना रिपोर्ट देखें ⚖️
+
+      <button onclick="runFullComparison()" class="w-full py-3 rounded-xl font-bold text-white royal-gradient shadow active:scale-95 transition">
+        4-तरफा लाइव तुलना देखें ⚖️
       </button>
     </div>
-    <div id="cmp-result-area" class="mt-4"></div>
+    <div id="cmp-result" class="mt-4"></div>
   `;
+  document.getElementById('cmp-p2').selectedIndex = 12;
+  runFullComparison();
 }
 
-function runComparison() {
-  const p1 = LIC_PLANS.find(p => p.no === document.getElementById('cmp-plan1').value);
-  const p2No = document.getElementById('cmp-plan2').value;
-  const p2 = p2No !== 'NONE' ? LIC_PLANS.find(p => p.no === p2No) : null;
+function runFullComparison() {
+  const p1 = LIC_PLANS.find(p => p.no === document.getElementById('cmp-p1').value);
+  const p2 = LIC_PLANS.find(p => p.no === document.getElementById('cmp-p2').value);
   const govtType = document.getElementById('cmp-govt').value;
-  const budget = parseInt(document.getElementById('cmp-budget').value) || 50000;
-  const yrs = parseInt(document.getElementById('cmp-years').value) || 15;
+  const budget = Math.max(5000, parseInt(document.getElementById('cmp-budget').value) || 50000);
+  const term = Math.max(5, parseInt(document.getElementById('cmp-term').value) || 20);
 
-  const totalInvested = budget * yrs;
+  const ppt = Math.min(term, 15);
+  const totalInvested = budget * ppt;
 
-  // LIC प्लान 1 गणना
   const sa1 = Math.round((budget / p1.rate) * 1000);
-  const mat1 = Math.round(sa1 + (sa1 / 1000) * p1.bonus * yrs + (sa1 / 1000) * p1.fab);
+  const ret1 = Math.round(sa1 + (sa1 / 1000) * (p1.bonus * term + p1.fab));
 
-  // LIC प्लान 2 गणना (यदि चुना हो)
-  let sa2 = 0, mat2 = 0;
-  if (p2) {
-    sa2 = Math.round((budget / p2.rate) * 1000);
-    mat2 = Math.round(sa2 + (sa2 / 1000) * p2.bonus * yrs + (sa2 / 1000) * p2.fab);
+  const sa2 = Math.round((budget / p2.rate) * 1000);
+  const ret2 = Math.round(sa2 + (sa2 / 1000) * (p2.bonus * term + p2.fab));
+
+  let fdCorpus = 0;
+  for (let i = 0; i < term; i++) {
+    if (i < ppt) fdCorpus += budget;
+    fdCorpus = fdCorpus * 1.049;
   }
 
-  // सरकारी / बैंक विकल्प की चक्रवृद्धि गणना
   const govtRates = {
-    FD: { name: "बैंक FD (टैक्स कटने के बाद)", netRate: 0.049, taxNote: "ब्याज पर हर साल 30% टैक्स कटता है", cover: "₹ 0 (कोई बीमा नहीं)", loan: "FD पर 80% तक" },
-    PPF: { name: "पोस्ट ऑफिस PPF", netRate: 0.071, taxNote: "टैक्स-फ्री, पर 15 साल सख्त लॉक-इन", cover: "₹ 0 (कोई बीमा नहीं)", loan: "सीमित शर्तों पर" },
-    SSY: { name: "सुकन्या समृद्धि (SSY)", netRate: 0.082, taxNote: "केवल 10 साल से कम की बेटी के लिए", cover: "₹ 0 (कोई बीमा नहीं)", loan: "लोन सुविधा नहीं" },
-    NSC: { name: "पोस्ट ऑफिस NSC", netRate: 0.054, taxNote: "मैच्योरिटी ब्याज पर टैक्स लगता है", cover: "₹ 0 (कोई बीमा नहीं)", loan: "बैंक में गिरवी रखकर" },
-    KVP: { name: "किसान विकास पत्र (KVP)", netRate: 0.0525, taxNote: "80C छूट नहीं, ब्याज टैक्स योग्य", cover: "₹ 0 (कोई बीमा नहीं)", loan: "सीमित सुविधा" }
+    ppf: { name: 'पोस्ट ऑफिस PPF', rate: 0.071, tax: 'टैक्स-फ्री (EEE)' },
+    ssy: { name: 'सुकन्या समृद्धि (SSY)', rate: 0.082, tax: 'टैक्स-फ्री (केवल बेटी)' },
+    nsc: { name: 'पोस्ट ऑफिस NSC/TD', rate: 0.054, tax: 'ब्याज करयोग्य' },
+    kvp: { name: 'किसान विकास पत्र', rate: 0.052, tax: 'ब्याज करयोग्य' }
   };
   const gInfo = govtRates[govtType];
-  let govtMat = 0;
-  for (let i = 0; i < yrs; i++) {
-    govtMat = (govtMat + budget) * (1 + gInfo.netRate);
+  let govtCorpus = 0;
+  for (let i = 0; i < term; i++) {
+    if (i < ppt) govtCorpus += budget;
+    govtCorpus = govtCorpus * (1 + gInfo.rate);
   }
-  govtMat = Math.round(govtMat);
 
-  const waMsg = `*निवेश तुलना रिपोर्ट (${formatINR(budget)}/वर्ष x ${yrs} साल)*\n\n` +
-    `✅ *LIC ${p1.name} (${p1.no}):*\n- पहले दिन से जीवन सुरक्षा: ${formatINR(sa1)}\n- अनुमानित मैच्योरिटी: ${formatINR(mat1)} (100% टैक्स-फ्री 10(10D))\n\n` +
-    `🏦 *${gInfo.name}:*\n- जीवन सुरक्षा कवर: ₹ 0\n- मैच्योरिटी: ${formatINR(govtMat)}\n\n` +
-    `निष्कर्ष: पहले दिन से पूरे परिवार की सुरक्षा केवल LIC में मिलती है!\nसंपर्क: ${currentAgent.name} (${currentAgent.phone})`;
+  const shareMsg = `*निवेश तुलना रिपोर्ट (${term} वर्ष)*\nसालाना बचत: ${formatINR(budget)} (${ppt} वर्ष)\n\n1️⃣ *LIC ${p1.name}:* ${formatINR(ret1)} (टैक्स-फ्री + ${formatINR(sa1)} बीमा कवर)\n2️⃣ *LIC ${p2.name}:* ${formatINR(ret2)} (टैक्स-फ्री + ${formatINR(sa2)} बीमा कवर)\n3️⃣ *${gInfo.name}:* ${formatINR(govtCorpus)} (बीमा कवर: ₹ 0)\n4️⃣ *बैंक FD (टैक्स बाद):* ${formatINR(fdCorpus)} (बीमा कवर: ₹ 0)\n\n- ${currentAgent.name} (${currentAgent.phone})`;
 
-  document.getElementById('cmp-result-area').innerHTML = `
-    <div class="bg-white p-4 rounded-2xl shadow-md space-y-3 border border-amber-200">
-      <h3 class="font-bold text-sm text-slate-800 border-b pb-2">तुलना परिणाम (कुल निवेश: ${formatINR(totalInvested)})</h3>
-      <div class="overflow-x-auto">
-        <table class="w-full text-xs border-collapse">
-          <thead>
-            <tr class="bg-slate-800 text-white">
-              <th class="p-2 text-left">विशेषता</th>
+  document.getElementById('cmp-result').innerHTML = `
+    <div class="bg-white p-3.5 rounded-2xl shadow-md space-y-3">
+      <h4 class="font-bold text-sm text-slate-800 text-center">तुलनात्मक चार्ट (${term} वर्ष • बचत: ${formatINR(budget)}/वर्ष)</h4>
+      <div class="overflow-x-auto border rounded-xl">
+        <table class="w-full text-[11px] border-collapse">
+          <thead class="bg-slate-900 text-white">
+            <tr>
+              <th class="p-2 text-left">मापदंड</th>
               <th class="p-2 text-right bg-blue-900">LIC ${p1.no}</th>
-              ${p2 ? `<th class="p-2 text-right bg-indigo-900">LIC ${p2.no}</th>` : ''}
-              <th class="p-2 text-right bg-amber-800">${govtType}</th>
+              <th class="p-2 text-right bg-indigo-900">LIC ${p2.no}</th>
+              <th class="p-2 text-right bg-amber-900">${gInfo.name.split(' ')[0]}</th>
+              <th class="p-2 text-right bg-slate-700">बैंक FD</th>
             </tr>
           </thead>
           <tbody class="divide-y">
             <tr>
-              <td class="p-2 font-bold">पहले दिन से बीमा कवर</td>
-              <td class="p-2 text-right font-bold text-blue-700">${formatINR(sa1)}</td>
-              ${p2 ? `<td class="p-2 text-right font-bold text-indigo-700">${formatINR(sa2)}</td>` : ''}
-              <td class="p-2 text-right text-red-600 font-bold">₹ 0 (शून्य)</td>
+              <td class="p-2 font-bold">कुल जमा</td>
+              <td class="p-2 text-right">${formatINR(totalInvested)}</td>
+              <td class="p-2 text-right">${formatINR(totalInvested)}</td>
+              <td class="p-2 text-right">${formatINR(totalInvested)}</td>
+              <td class="p-2 text-right">${formatINR(totalInvested)}</td>
             </tr>
-            <tr class="bg-slate-50">
-              <td class="p-2 font-bold">अनुमानित मैच्योरिटी</td>
-              <td class="p-2 text-right font-extrabold text-emerald-700">${formatINR(mat1)}</td>
-              ${p2 ? `<td class="p-2 text-right font-extrabold text-emerald-700">${formatINR(mat2)}</td>` : ''}
-              <td class="p-2 text-right font-bold text-slate-700">${formatINR(govtMat)}</td>
+            <tr class="bg-blue-50/60">
+              <td class="p-2 font-bold text-blue-900">बीमा कवर</td>
+              <td class="p-2 text-right font-extrabold text-blue-700">${formatINR(sa1)}</td>
+              <td class="p-2 text-right font-extrabold text-indigo-700">${formatINR(sa2)}</td>
+              <td class="p-2 text-right text-red-600 font-bold">₹ 0</td>
+              <td class="p-2 text-right text-red-600 font-bold">₹ 0</td>
+            </tr>
+            <tr class="bg-emerald-50/70">
+              <td class="p-2 font-bold text-emerald-900">मैच्योरिटी फंड</td>
+              <td class="p-2 text-right font-extrabold text-emerald-700">${formatINR(ret1)}</td>
+              <td class="p-2 text-right font-extrabold text-emerald-700">${formatINR(ret2)}</td>
+              <td class="p-2 text-right font-bold">${formatINR(govtCorpus)}</td>
+              <td class="p-2 text-right font-bold">${formatINR(fdCorpus)}</td>
             </tr>
             <tr>
-              <td class="p-2 font-bold">इनकम टैक्स नियम</td>
-              <td class="p-2 text-right text-emerald-700">100% टैक्स-फ्री</td>
-              ${p2 ? `<td class="p-2 text-right text-emerald-700">100% टैक्स-फ्री</td>` : ''}
-              <td class="p-2 text-right text-[10px] text-slate-600">${gInfo.taxNote}</td>
-            </tr>
-            <tr class="bg-slate-50">
-              <td class="p-2 font-bold">अनहोनी पर परिवार को</td>
-              <td class="p-2 text-right text-blue-800 font-semibold">पूरा बीमा + बोनस</td>
-              ${p2 ? `<td class="p-2 text-right text-blue-800 font-semibold">पूरा बीमा + बोनस</td>` : ''}
-              <td class="p-2 text-right text-slate-500">सिर्फ जमा राशि</td>
+              <td class="p-2 font-bold">टैक्स नियम</td>
+              <td class="p-2 text-right text-emerald-700 font-bold">10(10D) फ्री</td>
+              <td class="p-2 text-right text-emerald-700 font-bold">10(10D) फ्री</td>
+              <td class="p-2 text-right text-amber-700">${gInfo.tax}</td>
+              <td class="p-2 text-right text-red-600">TDS + टैक्स</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-900">
-        💡 <b>ग्राहक को समझाने का मुख्य बिंदु:</b> ${gInfo.name} में यदि निवेशक के साथ कोई अनहोनी हो जाए, तो बैंक केवल जमा किया हुआ पैसा लौटाता है—लेकिन LIC पहले दिन से <b>${formatINR(sa1)}</b> की पूरी सुरक्षा गारंटी देता है।
-      </div>
-      <a href="https://wa.me/?text=${encodeURIComponent(waMsg)}" target="_blank"
-        class="block w-full py-3 bg-emerald-600 text-white rounded-xl text-xs font-bold text-center shadow">
-        💬 तुलना रिपोर्ट व्हाट्सएप पर भेजें
+      <a href="https://wa.me/?text=${encodeURIComponent(shareMsg)}" target="_blank" class="block w-full py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-bold text-center">
+        💬 तुलना चार्ट व्हाट्सएप पर भेजें
       </a>
     </div>`;
 }
 
 // 3. कॉम्बो प्लान बिल्डर UI
 function renderComboUI(container) {
-  const combos = [
-    { id: 'kanyadan', title: '👰 कन्यादान / बेटी की शादी महा-पैकेज', plans: 'जीवन लक्ष्य (733) + जीवन लाभ (736)', daily: 150, fund: '₹ 26,50,000', tag: 'बेटी की शादी के समय एकमुश्त बड़ा फंड + पिता की अनुपस्थिति में भी प्रीमियम माफ!' },
-    { id: 'pension', title: '👴 आजीवन टैक्स-फ्री पेंशन कॉम्बो', plans: 'जीवन उत्सव (771) + जीवन उमंग (745)', daily: 250, fund: '₹ 1,20,000 / वर्ष आजीवन', tag: '10-15 साल निवेश करें और 100 वर्ष की आयु तक हर साल टैक्स-फ्री पेंशन पाएं।' },
-    { id: 'edu', title: '🎓 चाइल्ड हायर एजुकेशन गारंटी पैक', plans: 'अमृतबाल (774) + जीवन तरुण (734)', daily: 180, fund: '₹ 22,00,000 (18 से 25 वर्ष तक)', tag: 'बच्चे की कॉलेज फीस और उच्च शिक्षा के लिए हर साल गारंटीड फंड।' },
-    { id: 'family', title: '🛡️ संपूर्ण परिवार 3-पीढ़ी सुरक्षा कवच', plans: 'जीवन आनंद (715) + बीमा कवच टर्म (887)', daily: 200, fund: '₹ 1 करोड़ कवर + ₹ 25 लाख बचत', tag: 'परिवार को 1 करोड़ की सुरक्षा और मैच्योरिटी पर 25 लाख का रिटर्न।' }
-  ];
-
-  let cards = combos.map(c => {
-    const msg = `*${c.title}*\nशामिल प्लान: ${c.plans}\nअनुमानित बचत: मात्र ₹ ${c.daily}/दिन\nअनुमानित लाभ: ${c.fund}\nविशेषता: ${c.tag}\n\nअधिक जानकारी के लिए संपर्क करें:\n${currentAgent.name} (${currentAgent.phone})`;
-    return `
-      <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-2">
-        <div class="font-extrabold text-sm text-blue-900">${c.title}</div>
-        <div class="text-xs text-amber-700 font-bold bg-amber-50 px-2.5 py-1 rounded-lg inline-block">कॉम्बिनेशन: ${c.plans}</div>
-        <div class="grid grid-cols-2 gap-2 bg-slate-50 p-2.5 rounded-xl text-xs">
-          <div><span class="text-slate-500 block text-[10px]">अनुमानित बचत</span><b>₹ ${c.daily} / दिन</b></div>
-          <div><span class="text-slate-500 block text-[10px]">अनुमानित लाभ</span><b class="text-emerald-700">${c.fund}</b></div>
+  container.innerHTML = `
+    <div class="space-y-3">
+      <div class="bg-white p-4 rounded-2xl shadow-sm space-y-3">
+        <label class="text-xs font-bold text-slate-600">रेडीमेड सेल्स कॉन्सेप्ट चुनें:</label>
+        <select id="combo-type" onchange="buildComboPlan()" class="w-full p-2.5 border rounded-xl text-sm font-bold bg-emerald-50 text-emerald-900">
+          <option value="kanyadaan">👰 कन्यादान महा-कॉम्बो (जीवन लक्ष्य 733 + अमृतबाल 774)</option>
+          <option value="pension">👴 आजीवन शाही पेंशन कॉम्बो (जीवन उत्सव 771 + जीवन उमंग 745)</option>
+          <option value="education">🎓 चाइल्ड हायर एजुकेशन कॉम्बो (जीवन तरुण 734 + लाभ 736)</option>
+          <option value="family">🛡️ संपूर्ण परिवार 3-पीढ़ी सुरक्षा कवच (आनंद 715 + बीमा कवच 887)</option>
+        </select>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs font-bold text-slate-600">ग्राहक का नाम</label>
+            <input type="text" id="combo-client" value="श्री मनोज गुप्ता" oninput="buildComboPlan()" class="w-full mt-1 p-2 border rounded-xl text-sm" />
+          </div>
+          <div>
+            <label class="text-xs font-bold text-slate-600">दैनिक बचत लक्ष्य (₹/दिन)</label>
+            <input type="number" id="combo-daily" value="200" step="50" oninput="buildComboPlan()" class="w-full mt-1 p-2 border rounded-xl text-sm font-bold" />
+          </div>
         </div>
-        <p class="text-xs text-slate-600 leading-relaxed">${c.tag}</p>
-        <a href="https://wa.me/?text=${encodeURIComponent(msg)}" target="_blank"
-          class="block w-full py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-bold text-center">
-          💬 यह कॉम्बो ग्राहक को व्हाट्सएप करें
-        </a>
-      </div>`;
-  }).join('');
+        <button onclick="buildComboPlan()" class="w-full py-3 rounded-xl font-bold text-white gold-gradient shadow active:scale-95 transition">
+          आकर्षक कॉम्बो पैकेज बनाएं 🎁
+        </button>
+      </div>
+      <div id="combo-output"></div>
+    </div>
+  `;
+  buildComboPlan();
+}
 
-  container.innerHTML = `<div class="space-y-3">${cards}</div>`;
+function buildComboPlan() {
+  const type = document.getElementById('combo-type').value;
+  const client = document.getElementById('combo-client').value || 'सम्मानित ग्राहक';
+  const daily = Math.max(20, parseInt(document.getElementById('combo-daily').value) || 200);
+  const yearly = daily * 365;
+
+  const combos = {
+    kanyadaan: { title: 'कन्यादान महा-कॉम्बो पैकेज', plans: 'जीवन लक्ष्य (733) + अमृतबाल (774)', mult: 28, coverMult: 16, highlight: 'पिता के न रहने पर भी सारे प्रीमियम माफ + बेटी की शादी पर एकमुश्त टैक्स-फ्री फंड!' },
+    pension: { title: 'आजीवन शाही पेंशन कॉम्बो', plans: 'जीवन उत्सव (771) + जीवन उमंग  (745)', mult: 34, coverMult: 14, highlight: '15 साल बचत करें और 100 वर्ष की आयु तक हर साल टैक्स-फ्री पेंशन पाएं!' },
+    education: { title: 'चाइल्ड एजुकेशन गारंटी पैक', plans: 'जीवन तरुण (734) + जीवन लाभ (736)', mult: 26, coverMult: 15, highlight: 'बच्चे की 18 से 25 वर्ष की उम्र में हर साल कॉलेज फीस के लिए गारंटीड पैसा!' },
+    family: { title: '3-पीढ़ी संपूर्ण सुरक्षा कवच', plans: 'न्यू जीवन आनंद (715) + बीमा कवच (887)', mult: 24, coverMult: 45, highlight: 'बड़ा टर्म कवर + मैच्योरिटी के बाद भी आजीवन फ्री रिस्क कवर!' }
+  };
+
+  const c = combos[type];
+  const estReturn = Math.round(yearly * c.mult);
+  const estCover = Math.round(yearly * c.coverMult);
+  const msg = `*${c.title} - ${client}*\nकेवल ₹${daily}/दिन की बचत से:\n✅ शामिल प्लान: ${c.plans}\n🛡️ कुल सुरक्षा कवच: ${formatINR(estCover)}\n💰 अनुमानित टैक्स-फ्री लाभ: ${formatINR(estReturn)}\n✨ खासियत: ${c.highlight}\n\nसंपर्क: ${currentAgent.name} (${currentAgent.phone})`;
+
+  document.getElementById('combo-output').innerHTML = `
+    <div class="bg-white p-4 rounded-2xl shadow-md border-2 border-amber-300 space-y-3">
+      <div class="text-center">
+        <span class="bg-amber-100 text-amber-800 text-[10px] font-extrabold px-2.5 py-1 rounded-full">स्पेशल कॉम्बो प्रस्ताव</span>
+        <h3 class="text-lg font-extrabold text-slate-900 mt-1">${c.title}</h3>
+        <p class="text-xs text-slate-500">तैयार किया गया: <b>${client}</b> के लिए</p>
+      </div>
+      <div class="grid grid-cols-2 gap-2.5 bg-slate-50 p-3 rounded-xl text-center">
+        <div><div class="text-[10px] text-slate-500">दैनिक बचत</div><div class="text-sm font-extrabold text-blue-700">₹ ${daily} / दिन</div></div>
+        <div><div class="text-[10px] text-slate-500">कुल सुरक्षा कवर</div><div class="text-sm font-extrabold text-rose-700">${formatINR(estCover)}</div></div>
+      </div>
+      <div class="bg-emerald-50 p-3 rounded-xl text-center border border-emerald-200">
+        <div class="text-xs text-emerald-800 font-bold">कुल अनुमानित टैक्स-फ्री रिटर्न</div>
+        <div class="text-2xl font-extrabold text-emerald-700 mt-0.5">${formatINR(estReturn)}</div>
+      </div>
+      <p class="text-xs text-slate-700 bg-blue-50 p-2.5 rounded-xl">⭐ <b>मुख्य लाभ:</b> ${c.highlight}</p>
+      <a href="https://wa.me/?text=${encodeURIComponent(msg)}" target="_blank" class="block w-full py-3 bg-emerald-600 text-white rounded-xl text-xs font-bold text-center shadow">
+        💬 यह कॉम्बो ऑफर व्हाट्सएप पर भेजें
+      </a>
+    </div>`;
 }
