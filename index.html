@@ -3,101 +3,101 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>बीमा सारथी - LIC एजेंट सहायक</title>
+  <title>बीमा सारथी - स्मार्ट LIC एजेंट ऐप</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Noto Sans Devanagari', sans-serif; background-color: #f1f5f9; }
+    body { font-family: 'Noto Sans Devanagari', sans-serif; background-color: #eef2f6; }
     .hidden-view { display: none !important; }
-    .royal-gradient { background: linear-gradient(135deg, #0f294a 0%, #1e40af 100%); }
-    .gold-gradient { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
+    .royal-gradient { background: linear-gradient(135deg, #091e3a 0%, #173f7a 60%, #1e40af 100%); }
+    .gold-gradient { background: linear-gradient(135deg, #d97706 0%, #f59e0b 50%, #fbbf24 100%); }
+    .card-shadow { box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04); }
   </style>
 </head>
-<body class="text-slate-800 antialiased select-none">
+<body class="text-slate-900 antialiased select-none">
 
-  <!-- 1. लॉगिन स्क्रीन -->
+  <!-- 1. प्रीमियम लॉगिन स्क्रीन -->
   <div id="view-login" class="min-h-screen flex flex-col justify-between royal-gradient text-white p-6">
-    <div class="mt-10 text-center">
-      <div class="w-20 h-20 mx-auto bg-white/15 backdrop-blur-md rounded-2xl flex items-center justify-center border border-amber-400/50 shadow-xl mb-4">
-        <span class="text-4xl">🛡️</span>
+    <div class="mt-8 text-center">
+      <div class="w-24 h-24 mx-auto bg-white/15 backdrop-blur-md rounded-3xl flex items-center justify-center border-2 border-amber-400 shadow-2xl mb-4">
+        <span class="text-5xl">🛡️</span>
       </div>
-      <h1 class="text-3xl font-extrabold tracking-tight text-amber-300">बीमा सारथी</h1>
-      <p class="text-blue-200 text-sm mt-1">स्मार्ट LIC एजेंट सेल्स एवं ब्रांडिंग ऐप</p>
+      <h1 class="text-4xl font-black tracking-tight text-amber-300 drop-shadow">बीमा सारथी</h1>
+      <p class="text-blue-100 text-base font-semibold mt-1.5">स्मार्ट LIC एजेंट सेल्स एवं ब्रांडिंग ऐप</p>
     </div>
 
-    <div class="bg-white text-slate-800 rounded-3xl p-6 shadow-2xl my-auto">
-      <h2 class="text-xl font-bold text-slate-900 mb-1">एजेंट लॉगिन</h2>
-      <p class="text-xs text-slate-500 mb-5">बिना पासवर्ड या OTP के तुरंत प्रवेश करें</p>
+    <div class="bg-white text-slate-900 rounded-3xl p-6 shadow-2xl my-auto border-2 border-amber-300/50">
+      <h2 class="text-2xl font-black text-slate-900 mb-1">एजेंट लॉगिन</h2>
+      <p class="text-sm text-slate-500 font-medium mb-5">बिना पासवर्ड या OTP के तुरंत प्रवेश करें</p>
 
-      <label class="block text-sm font-semibold text-slate-700 mb-1.5">आपका LIC एजेंट कोड</label>
-      <input type="text" id="login-code-input" placeholder="उदाहरण: 0123456A"
-        class="w-full px-4 py-3.5 text-lg font-bold uppercase tracking-wider border-2 border-slate-200 rounded-xl focus:border-blue-600 focus:outline-none bg-slate-50" />
+      <label class="block text-base font-extrabold text-slate-700 mb-2">आपका LIC एजेंट कोड</label>
+      <input type="text" id="login-code-input" placeholder="उदाहरण: DEMO123"
+        class="w-full px-4 py-4 text-xl font-black uppercase tracking-wider border-2 border-blue-200 rounded-2xl focus:border-blue-600 focus:outline-none bg-blue-50/40 text-blue-950" />
 
-      <div id="login-error" class="hidden mt-3 p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700">
-        <p class="font-bold">⚠️ यह एजेंट कोड सक्रिय नहीं है।</p>
-        <p class="mt-0.5">नया सब्सक्रिप्शन या ट्रायल लेने के लिए संपर्क करें।</p>
+      <div id="login-error" class="hidden mt-3 p-3.5 bg-red-50 border border-red-200 rounded-2xl text-sm text-red-700">
+        <p class="font-extrabold">⚠️ यह एजेंट कोड सक्रिय नहीं है।</p>
+        <p class="mt-0.5 text-xs">नया सब्सक्रिप्शन या ट्रायल लेने के लिए संपर्क करें।</p>
       </div>
 
       <button onclick="handleAgentLogin()"
-        class="w-full mt-5 py-3.5 rounded-xl font-bold text-white text-base royal-gradient shadow-lg active:scale-95 transition">
+        class="w-full mt-5 py-4 rounded-2xl font-black text-white text-lg royal-gradient shadow-xl active:scale-95 transition">
         लॉगिन करें ➔
       </button>
 
-      <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-        <button onclick="fillDemoCode()" class="text-blue-700 font-semibold underline">डेमो कोड भरें (DEMO123)</button>
+      <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-sm">
+        <button onclick="fillDemoCode()" class="text-blue-700 font-extrabold underline">डेमो कोड (DEMO123)</button>
         <a href="https://wa.me/917004776567?text=नमस्ते,%20मुझे%20बीमा%20सारथी%20ऐप%20का%20एक्टिवेशन%20चाहिए" target="_blank"
-          class="text-emerald-700 font-bold flex items-center gap-1">💬 एडमिन से जुड़ें</a>
+          class="text-emerald-700 font-extrabold flex items-center gap-1">💬 एडमिन से जुड़ें</a>
       </div>
     </div>
 
-    <p class="text-center text-xs text-blue-200/80 mb-2">100% ऑफलाइन सपोर्ट • सुरक्षित लोकल डेटा</p>
+    <p class="text-center text-xs text-blue-200 font-semibold mb-2">100% ऑफलाइन सपोर्ट • सुरक्षित लोकल डेटा</p>
   </div>
 
   <!-- 2. प्रोफाइल सेटअप स्क्रीन -->
   <div id="view-profile" class="hidden-view min-h-screen bg-slate-100 pb-10">
-    <div class="royal-gradient text-white p-5 rounded-b-3xl shadow-md">
+    <div class="royal-gradient text-white p-6 rounded-b-3xl shadow-lg">
       <div class="flex items-center justify-between">
-        <h2 class="text-lg font-bold">एजेंट प्रोफाइल सेटअप</h2>
-        <button id="btn-cancel-profile" onclick="showView('dashboard')" class="hidden text-xs bg-white/20 px-3 py-1 rounded-full">बंद करें</button>
+        <h2 class="text-2xl font-black">एजेंट प्रोफाइल सेटअप</h2>
+        <button id="btn-cancel-profile" onclick="showView('dashboard')" class="hidden text-sm font-bold bg-white/20 px-3.5 py-1.5 rounded-full">बंद करें</button>
       </div>
-      <p class="text-xs text-blue-200 mt-1">यह जानकारी आपके हर PDF कोटेशन और पोस्टर पर छपेगी</p>
+      <p class="text-sm text-blue-200 mt-1">यह जानकारी आपके हर PDF कोटेशन और पोस्टर पर छपेगी</p>
     </div>
 
     <div class="p-4 space-y-4">
-      <div class="bg-white p-5 rounded-2xl shadow-sm space-y-3.5">
+      <div class="bg-white p-5 rounded-3xl card-shadow space-y-4">
         <div class="flex items-center gap-4">
           <img id="profile-preview-img" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-            class="w-16 h-16 rounded-full object-cover border-2 border-amber-400 bg-slate-100" />
+            class="w-20 h-20 rounded-full object-cover border-4 border-amber-400 bg-slate-100 shadow" />
           <div>
-            <label class="inline-block bg-blue-50 text-blue-700 text-xs font-bold px-3 py-2 rounded-lg border border-blue-200 cursor-pointer">
+            <label class="inline-block bg-blue-50 text-blue-800 text-sm font-extrabold px-4 py-2.5 rounded-xl border border-blue-200 cursor-pointer">
               📷 अपनी फोटो चुनें
               <input type="file" accept="image/*" onchange="handlePhotoUpload(event)" class="hidden" />
             </label>
-            <p class="text-[11px] text-slate-400 mt-1">पोस्टर और PDF पर दिखेगी</p>
+            <p class="text-xs text-slate-400 mt-1">पोस्टर और PDF पर दिखेगी</p>
           </div>
         </div>
 
         <div>
-          <label class="text-xs font-bold text-slate-600">पूरा नाम *</label>
-          <input type="text" id="prof-name" placeholder="जैसे: राजेश कुमार शर्मा"
-            class="w-full mt-1 px-3.5 py-2.5 border rounded-xl text-sm font-semibold focus:border-blue-600 focus:outline-none" />
+          <label class="text-sm font-extrabold text-slate-700">पूरा नाम *</label>
+          <input type="text" id="prof-name" placeholder="जैसे: समसाद अंसारी"
+            class="w-full mt-1 px-4 py-3 border-2 border-slate-200 rounded-xl text-base font-bold focus:border-blue-600 focus:outline-none" />
         </div>
-
-        <div>
-          <label class="text-xs font-bold text-slate-600">व्हाट्सएप / मोबाइल नंबर *</label>
+                <div>
+          <label class="text-sm font-extrabold text-slate-700">व्हाट्सएप / मोबाइल नंबर *</label>
           <input type="tel" id="prof-phone" placeholder="10 अंकों का नंबर"
-            class="w-full mt-1 px-3.5 py-2.5 border rounded-xl text-sm font-semibold focus:border-blue-600 focus:outline-none" />
+            class="w-full mt-1 px-4 py-3 border-2 border-slate-200 rounded-xl text-base font-bold focus:border-blue-600 focus:outline-none" />
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="text-xs font-bold text-slate-600">ब्रांच कोड / शहर</label>
+            <label class="text-sm font-extrabold text-slate-700">ब्रांच कोड / शहर</label>
             <input type="text" id="prof-branch" placeholder="जैसे: ब्रांच 556"
-              class="w-full mt-1 px-3.5 py-2.5 border rounded-xl text-sm focus:border-blue-600 focus:outline-none" />
+              class="w-full mt-1 px-4 py-3 border-2 border-slate-200 rounded-xl text-sm font-bold focus:border-blue-600 focus:outline-none" />
           </div>
           <div>
-            <label class="text-xs font-bold text-slate-600">क्लब / पद</label>
-            <select id="prof-club" class="w-full mt-1 px-3 py-2.5 border rounded-xl text-sm bg-white focus:border-blue-600 focus:outline-none">
+            <label class="text-sm font-extrabold text-slate-700">क्लब / पद</label>
+            <select id="prof-club" class="w-full mt-1 px-3 py-3 border-2 border-slate-200 rounded-xl text-sm font-bold bg-white focus:border-blue-600 focus:outline-none">
               <option value="LIC बीमा सलाहकार">LIC बीमा सलाहकार</option>
               <option value="MDRT क्वालिफाइड">MDRT क्वालिफाइड</option>
               <option value="चेयरमैन क्लब सदस्य">चेयरमैन क्लब</option>
@@ -108,293 +108,128 @@
         </div>
 
         <button onclick="saveAgentProfile()"
-          class="w-full py-3.5 rounded-xl font-bold text-white royal-gradient shadow-md active:scale-95 transition mt-2">
+          class="w-full py-4 rounded-2xl font-black text-white text-lg royal-gradient shadow-xl active:scale-95 transition mt-2">
           प्रोफाइल सेव करें और आगे बढ़ें ✓
         </button>
       </div>
     </div>
   </div>
 
-  <!-- 3. मुख्य डैशबोर्ड (होम मेन्यू) -->
+  <!-- 3. प्रीमियम डैशबोर्ड (बड़े फॉन्ट और आकर्षक मेन्यू) -->
   <div id="view-dashboard" class="hidden-view min-h-screen pb-20">
-    <div class="royal-gradient text-white p-5 rounded-b-3xl shadow-lg">
+    <!-- ऊपरी VIP हेडर कार्ड -->
+    <div class="royal-gradient text-white p-6 rounded-b-[2.2rem] shadow-xl border-b-4 border-amber-400">
       <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3.5">
           <img id="dash-avatar" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-            class="w-12 h-12 rounded-full object-cover border-2 border-amber-400 bg-white" />
+            class="w-16 h-16 rounded-full object-cover border-3 border-amber-400 bg-white shadow-lg" />
           <div>
-            <h2 id="dash-name" class="font-bold text-base leading-tight">एजेंट नाम</h2>
-            <p id="dash-meta" class="text-xs text-amber-300 font-medium">कोड: DEMO123 • LIC सलाहकार</p>
+            <span class="bg-amber-400/20 text-amber-300 border border-amber-400/40 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">
+              ⭐ वेरिफाइड एजेंट प्रोफाइल
+            </span>
+            <h2 id="dash-name" class="font-black text-xl tracking-tight mt-1 leading-tight">एजेंट नाम</h2>
+            <p id="dash-meta" class="text-xs text-blue-100 font-bold mt-0.5">कोड: DEMO123 • LIC सलाहकार</p>
           </div>
         </div>
-        <button onclick="openEditProfile()" class="p-2 bg-white/15 rounded-xl text-xs font-semibold">✏️ एडिट</button>
-      </div>
-
-      <div class="mt-4 bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-3 flex items-center justify-between text-xs">
-        <span>🔔 आज के रिन्यूअल व बर्थडे अलर्ट</span>
-        <button onclick="openModule('crm')" class="bg-amber-400 text-slate-900 font-bold px-2.5 py-1 rounded-lg">देखें ➔</button>
-      </div>
-    </div>
-
-    <!-- 6 मुख्य टूल्स मेन्यू -->
-    <div class="p-4">
-      <h3 class="text-sm font-bold text-slate-600 mb-3 px-1">मुख्य टूल्स चुनें</h3>
-      <div class="grid grid-cols-2 gap-3.5">
-        <button onclick="openModule('calc')" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-left active:scale-95 transition">
-          <div class="w-11 h-11 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-2xl mb-2.5">🧮</div>
-          <h4 class="font-bold text-sm text-slate-900">प्रीमियम व मैच्योरिटी</h4>
-          <p class="text-[11px] text-slate-500 mt-0.5">साल-दर-साल चार्ट + PDF</p>
-        </button>
-
-        <button onclick="openModule('compare')" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-left active:scale-95 transition">
-          <div class="w-11 h-11 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-2xl mb-2.5">⚖️</div>
-          <h4 class="font-bold text-sm text-slate-900">पॉलिसी व FD तुलना</h4>
-          <p class="text-[11px] text-slate-500 mt-0.5">2-3 प्लान और बैंक FD तुलना</p>
-        </button>
-
-        <button onclick="openModule('combo')" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-left active:scale-95 transition">
-          <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl mb-2.5">🎁</div>
-          <h4 class="font-bold text-sm text-slate-900">कॉम्बो प्लान बिल्डर</h4>
-          <p class="text-[11px] text-slate-500 mt-0.5">कन्यादान, पेंशन व शिक्षा पैक</p>
-        </button>
-
-        <button onclick="openModule('poster')" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-left active:scale-95 transition">
-          <div class="w-11 h-11 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-2xl mb-2.5">🎨</div>
-          <h4 class="font-bold text-sm text-slate-900">ब्रांडिंग पोस्टर मेकर</h4>
-          <p class="text-[11px] text-slate-500 mt-0.5">फोटो व नाम वाले कार्ड्स</p>
-        </button>
-
-        <button onclick="openModule('crm')" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-left active:scale-95 transition">
-          <div class="w-11 h-11 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center text-2xl mb-2.5">👨‍👩‍👧‍👦</div>
-          <h4 class="font-bold text-sm text-slate-900">360° फैमिली CRM</h4>
-          <p class="text-[11px] text-slate-500 mt-0.5">सभी पॉलिसी व रिमाइंडर</p>
-        </button>
-
-        <button onclick="openModule('objection')" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-left active:scale-95 transition">
-          <div class="w-11 h-11 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center text-2xl mb-2.5">🗣️</div>
-          <h4 class="font-bold text-sm text-slate-900">ऑब्जेक्शन हैंडलर</h4>
-          <p class="text-[11px] text-slate-500 mt-0.5">ग्राहक के बहानों के जवाब</p>
+        <button onclick="openEditProfile()" class="px-3.5 py-2 bg-white/15 hover:bg-white/25 rounded-2xl text-xs font-extrabold border border-white/20 shadow">
+          ✏️ एडिट
         </button>
       </div>
 
-      <div class="mt-6 text-center">
-        <button onclick="logoutAgent()" class="text-xs text-slate-400 underline">लॉगआउट करें</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 4. डायनामिक मॉड्यूल कंटेनर (बाकी JS फाइलें यहीं खुलेंगी) -->
-  <div id="view-module" class="hidden-view min-h-screen bg-slate-100 pb-16">
-    <div class="royal-gradient text-white p-4 sticky top-0 z-20 flex items-center gap-3 shadow">
-      <button onclick="showView('dashboard')" class="bg-white/20 px-3 py-1.5 rounded-xl text-sm font-bold">⬅ वापस</button>
-      <h2 id="module-title" class="font-bold text-base">मॉड्यूल</h2>
-    </div>
-    <div id="module-body" class="p-4"></div>
-  </div>
-
-  <!-- कोर लॉगिन व प्रोफाइल स्क्रिप्ट -->
-  <script>
-    const ALLOWED_CODES = ['DEMO123', '815462', 'LIC2026', 'AGENT01'];
-    let currentAgent = JSON.parse(localStorage.getItem('bs_agent') || 'null');
-
-    function showView(viewName) {
-      ['login', 'profile', 'dashboard', 'module'].forEach(v => {
-        document.getElementById('view-' + v).classList.add('hidden-view');
-      });
-      document.getElementById('view-' + viewName).classList.remove('hidden-view');
-      window.scrollTo(0, 0);
-    }
-
-    function fillDemoCode() {
-      document.getElementById('login-code-input').value = 'DEMO123';
-    }
-
-    function handleAgentLogin() {
-      const code = document.getElementById('login-code-input').value.trim().toUpperCase();
-      if (!ALLOWED_CODES.includes(code)) {
-        document.getElementById('login-error').classList.remove('hidden');
-        return;
-      }
-      document.getElementById('login-error').classList.add('hidden');
-      if (currentAgent && currentAgent.code === code && currentAgent.name) {
-        loadDashboard();
-      } else {
-        currentAgent = { code: code, photo: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' };
-        showView('profile');
-      }
-    }
-
-    function handlePhotoUpload(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(ev) {
-        currentAgent.photo = ev.target.result;
-        document.getElementById('profile-preview-img').src = ev.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function saveAgentProfile() {
-      const name = document.getElementById('prof-name').value.trim();
-      const phone = document.getElementById('prof-phone').value.trim();
-      if (!name || !phone) { alert('कृपया नाम और मोबाइल नंबर भरें'); return; }
-      currentAgent.name = name;
-      currentAgent.phone = phone;
-      currentAgent.branch = document.getElementById('prof-branch').value.trim() || 'LIC शाखा';
-      currentAgent.club = document.getElementById('prof-club').value;
-      localStorage.setItem('bs_agent', JSON.stringify(currentAgent));
-      loadDashboard();
-    }
-
-    function openEditProfile() {
-      document.getElementById('prof-name').value = currentAgent.name || '';
-      document.getElementById('prof-phone').value = currentAgent.phone || '';
-      document.getElementById('prof-branch').value = currentAgent.branch || '';
-      document.getElementById('prof-club').value = currentAgent.club || 'LIC बीमा सलाहकार';
-      if (currentAgent.photo) document.getElementById('profile-preview-img').src = currentAgent.photo;
-      document.getElementById('btn-cancel-profile').classList.remove('hidden');
-      showView('profile');
-    }
-
-    function loadDashboard() {
-      document.getElementById('dash-name').innerText = currentAgent.name;
-      document.getElementById('dash-meta').innerText = `कोड: ${currentAgent.code} • ${currentAgent.club}`;
-      if (currentAgent.photo) document.getElementById('dash-avatar').src = currentAgent.photo;
-      showView('dashboard');
-    }
-
-    function logoutAgent() {
-      localStorage.removeItem('bs_agent');
-      currentAgent = null;
-      showView('login');
-    }
-
-    function openModule(mod) {
-      showView('module');
-      if (typeof renderModule === 'function') {
-        renderModule(mod);
-      } else {
-        document.getElementById('module-body').innerHTML = '<p class="text-center text-sm text-slate-500 mt-10">कृपया अगली फाइलें (plans.js, calc.js, tools.js) जोड़ें।</p>';
-      }
-    }
-
-    window.onload = function() {
-      if (currentAgent && currentAgent.name) loadDashboard();
-    };
-  </script>
-
-  <!-- अगले भागों की फाइलें -->
-  <script src="plans.js"></script>
-  <script src="calc.js"></script>
-  <script src="tools.js"></script>
-</body>
-</html>
-        <div>
-          <label class="text-xs font-bold text-slate-600">व्हाट्सएप / मोबाइल नंबर *</label>
-          <input type="tel" id="prof-phone" placeholder="10 अंकों का नंबर"
-            class="w-full mt-1 px-3.5 py-2.5 border rounded-xl text-sm font-semibold focus:border-blue-600 focus:outline-none" />
+      <!-- अलर्ट पट्टी -->
+      <div class="mt-5 bg-gradient-to-r from-amber-500/25 to-yellow-500/20 backdrop-blur-md border border-amber-300/40 rounded-2xl p-3.5 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <span class="text-xl">🔔</span>
+          <span class="text-sm font-extrabold text-amber-100">आज के रिन्यूअल व बर्थडे अलर्ट</span>
         </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="text-xs font-bold text-slate-600">ब्रांच कोड / शहर</label>
-            <input type="text" id="prof-branch" placeholder="जैसे: ब्रांच 556"
-              class="w-full mt-1 px-3.5 py-2.5 border rounded-xl text-sm focus:border-blue-600 focus:outline-none" />
-          </div>
-          <div>
-            <label class="text-xs font-bold text-slate-600">क्लब / पद</label>
-            <select id="prof-club" class="w-full mt-1 px-3 py-2.5 border rounded-xl text-sm bg-white focus:border-blue-600 focus:outline-none">
-              <option value="LIC बीमा सलाहकार">LIC बीमा सलाहकार</option>
-              <option value="MDRT क्वालिफाइड">MDRT क्वालिफाइड</option>
-              <option value="चेयरमैन क्लब सदस्य">चेयरमैन क्लब</option>
-              <option value="BM क्लब सदस्य">BM क्लब सदस्य</option>
-              <option value="ZM क्लब सदस्य">ZM क्लब सदस्य</option>
-            </select>
-          </div>
-        </div>
-
-        <button onclick="saveAgentProfile()"
-          class="w-full py-3.5 rounded-xl font-bold text-white royal-gradient shadow-md active:scale-95 transition mt-2">
-          प्रोफाइल सेव करें और आगे बढ़ें ✓
+        <button onclick="openModule('crm')" class="gold-gradient text-slate-950 font-black text-xs px-3.5 py-2 rounded-xl shadow active:scale-95">
+          देखें ➔
         </button>
       </div>
     </div>
-  </div>
 
-  <!-- 3. मुख्य डैशबोर्ड (होम मेन्यू) -->
-  <div id="view-dashboard" class="hidden-view min-h-screen pb-20">
-    <div class="royal-gradient text-white p-5 rounded-b-3xl shadow-lg">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <img id="dash-avatar" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-            class="w-12 h-12 rounded-full object-cover border-2 border-amber-400 bg-white" />
+    <!-- 6 मुख्य टूल्स मेन्यू (बड़े कार्ड्स व बड़े फॉन्ट) -->
+    <div class="p-4 mt-1">
+      <div class="flex items-center justify-between mb-3.5 px-1">
+        <h3 class="text-base font-black text-slate-800">🚀 सेल्स एवं ब्रांडिंग टूल्स</h3>
+        <span class="text-xs font-bold text-blue-700 bg-blue-100 px-2.5 py-0.5 rounded-full">सभी 28 प्लान</span>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <!-- टूल 1 -->
+        <button onclick="openModule('calc')" class="bg-white p-4 rounded-3xl card-shadow border-2 border-blue-100 hover:border-blue-400 text-left active:scale-95 transition flex flex-col justify-between">
           <div>
-            <h2 id="dash-name" class="font-bold text-base leading-tight">एजेंट नाम</h2>
-            <p id="dash-meta" class="text-xs text-amber-300 font-medium">कोड: DEMO123 • LIC सलाहकार</p>
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 text-white flex items-center justify-center text-3xl shadow-md mb-3">🧮</div>
+            <h4 class="font-black text-base text-slate-900 leading-snug">प्रीमियम व मैच्योरिटी</h4>
+            <p class="text-xs font-semibold text-slate-500 mt-1 leading-relaxed">साल-दर-साल चार्ट और PDF कोटेशन</p>
           </div>
-        </div>
-        <button onclick="openEditProfile()" class="p-2 bg-white/15 rounded-xl text-xs font-semibold">✏️ एडिट</button>
+          <div class="mt-3 text-xs font-black text-blue-700 flex items-center gap-1">कैलकुलेट करें ➔</div>
+        </button>
+
+        <!-- टूल 2 -->
+        <button onclick="openModule('compare')" class="bg-white p-4 rounded-3xl card-shadow border-2 border-amber-100 hover:border-amber-400 text-left active:scale-95 transition flex flex-col justify-between">
+          <div>
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white flex items-center justify-center text-3xl shadow-md mb-3">⚖️</div>
+            <h4 class="font-black text-base text-slate-900 leading-snug">पॉलिसी व FD तुलना</h4>
+            <p class="text-xs font-semibold text-slate-500 mt-1 leading-relaxed">LIC, बैंक FD व पोस्ट ऑफिस तुलना</p>
+          </div>
+          <div class="mt-3 text-xs font-black text-amber-700 flex items-center gap-1">तुलना करें ➔</div>
+        </button>
+
+        <!-- टूल 3 -->
+        <button onclick="openModule('combo')" class="bg-white p-4 rounded-3xl card-shadow border-2 border-emerald-100 hover:border-emerald-400 text-left active:scale-95 transition flex flex-col justify-between">
+          <div>
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 text-white flex items-center justify-center text-3xl shadow-md mb-3">🎁</div>
+            <h4 class="font-black text-base text-slate-900 leading-snug">कॉम्बो प्लान बिल्डर</h4>
+            <p class="text-xs font-semibold text-slate-500 mt-1 leading-relaxed">कन्यादान, पेंशन व शिक्षा पैकेज</p>
+          </div>
+          <div class="mt-3 text-xs font-black text-emerald-700 flex items-center gap-1">कॉम्बो बनाएं ➔</div>
+        </button>
+
+        <!-- टूल 4 -->
+        <button onclick="openModule('poster')" class="bg-white p-4 rounded-3xl card-shadow border-2 border-purple-100 hover:border-purple-400 text-left active:scale-95 transition flex flex-col justify-between">
+          <div>
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-700 text-white flex items-center justify-center text-3xl shadow-md mb-3">🎨</div>
+            <h4 class="font-black text-base text-slate-900 leading-snug">ब्रांडिंग पोस्टर मेकर</h4>
+            <p class="text-xs font-semibold text-slate-500 mt-1 leading-relaxed">आपकी फोटो व नंबर वाले कार्ड्स</p>
+          </div>
+          <div class="mt-3 text-xs font-black text-purple-700 flex items-center gap-1">पोस्टर बनाएं ➔</div>
+        </button>
+
+        <!-- टूल 5 -->
+        <button onclick="openModule('crm')" class="bg-white p-4 rounded-3xl card-shadow border-2 border-rose-100 hover:border-rose-400 text-left active:scale-95 transition flex flex-col justify-between">
+          <div>
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500 to-pink-700 text-white flex items-center justify-center text-3xl shadow-md mb-3">👨‍👩‍👧‍👦</div>
+            <h4 class="font-black text-base text-slate-900 leading-snug">360° फैमिली CRM</h4>
+            <p class="text-xs font-semibold text-slate-500 mt-1 leading-relaxed">सभी पॉलिसी रिकॉर्ड व रिमाइंडर</p>
+          </div>
+          <div class="mt-3 text-xs font-black text-rose-700 flex items-center gap-1">लिस्ट देखें ➔</div>
+        </button>
+
+        <!-- टूल 6 -->
+        <button onclick="openModule('objection')" class="bg-white p-4 rounded-3xl card-shadow border-2 border-cyan-100 hover:border-cyan-400 text-left active:scale-95 transition flex flex-col justify-between">
+          <div>
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500 to-sky-700 text-white flex items-center justify-center text-3xl shadow-md mb-3">🗣️</div>
+            <h4 class="font-black text-base text-slate-900 leading-snug">ऑब्जेक्शन हैंडलर</h4>
+            <p class="text-xs font-semibold text-slate-500 mt-1 leading-relaxed">ग्राहक के बहानों के सटीक जवाब</p>
+          </div>
+          <div class="mt-3 text-xs font-black text-cyan-700 flex items-center gap-1">जवाब पढ़ें ➔</div>
+        </button>
       </div>
 
-      <div class="mt-4 bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-3 flex items-center justify-between text-xs">
-        <span>🔔 आज के रिन्यूअल व बर्थडे अलर्ट</span>
-        <button onclick="openModule('crm')" class="bg-amber-400 text-slate-900 font-bold px-2.5 py-1 rounded-lg">देखें ➔</button>
-      </div>
-    </div>
-
-    <!-- 6 मुख्य टूल्स मेन्यू -->
-    <div class="p-4">
-      <h3 class="text-sm font-bold text-slate-600 mb-3 px-1">मुख्य टूल्स चुनें</h3>
-      <div class="grid grid-cols-2 gap-3.5">
-        <button onclick="openModule('calc')" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-left active:scale-95 transition">
-          <div class="w-11 h-11 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-2xl mb-2.5">🧮</div>
-          <h4 class="font-bold text-sm text-slate-900">प्रीमियम व मैच्योरिटी</h4>
-          <p class="text-[11px] text-slate-500 mt-0.5">साल-दर-साल चार्ट + PDF</p>
+      <div class="mt-8 text-center">
+        <button onclick="logoutAgent()" class="px-5 py-2 bg-slate-200/80 rounded-full text-xs font-bold text-slate-600">
+          🚪 लॉगआउट करें
         </button>
-
-        <button onclick="openModule('compare')" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-left active:scale-95 transition">
-          <div class="w-11 h-11 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-2xl mb-2.5">⚖️</div>
-          <h4 class="font-bold text-sm text-slate-900">पॉलिसी व FD तुलना</h4>
-          <p class="text-[11px] text-slate-500 mt-0.5">2-3 प्लान और बैंक FD तुलना</p>
-        </button>
-
-        <button onclick="openModule('combo')" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-left active:scale-95 transition">
-          <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl mb-2.5">🎁</div>
-          <h4 class="font-bold text-sm text-slate-900">कॉम्बो प्लान बिल्डर</h4>
-          <p class="text-[11px] text-slate-500 mt-0.5">कन्यादान, पेंशन व शिक्षा पैक</p>
-        </button>
-
-        <button onclick="openModule('poster')" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-left active:scale-95 transition">
-          <div class="w-11 h-11 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-2xl mb-2.5">🎨</div>
-          <h4 class="font-bold text-sm text-slate-900">ब्रांडिंग पोस्टर मेकर</h4>
-          <p class="text-[11px] text-slate-500 mt-0.5">फोटो व नाम वाले कार्ड्स</p>
-        </button>
-
-        <button onclick="openModule('crm')" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-left active:scale-95 transition">
-          <div class="w-11 h-11 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center text-2xl mb-2.5">👨‍👩‍👧‍👦</div>
-          <h4 class="font-bold text-sm text-slate-900">360° फैमिली CRM</h4>
-          <p class="text-[11px] text-slate-500 mt-0.5">सभी पॉलिसी व रिमाइंडर</p>
-        </button>
-
-        <button onclick="openModule('objection')" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-left active:scale-95 transition">
-          <div class="w-11 h-11 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center text-2xl mb-2.5">🗣️</div>
-          <h4 class="font-bold text-sm text-slate-900">ऑब्जेक्शन हैंडलर</h4>
-          <p class="text-[11px] text-slate-500 mt-0.5">ग्राहक के बहानों के जवाब</p>
-        </button>
-      </div>
-
-      <div class="mt-6 text-center">
-        <button onclick="logoutAgent()" class="text-xs text-slate-400 underline">लॉगआउट करें</button>
       </div>
     </div>
   </div>
 
   <!-- 4. डायनामिक मॉड्यूल कंटेनर -->
   <div id="view-module" class="hidden-view min-h-screen bg-slate-100 pb-16">
-    <div class="royal-gradient text-white p-4 sticky top-0 z-20 flex items-center gap-3 shadow">
-      <button onclick="showView('dashboard')" class="bg-white/20 px-3 py-1.5 rounded-xl text-sm font-bold">⬅ वापस</button>
-      <h2 id="module-title" class="font-bold text-base">मॉड्यूल</h2>
+    <div class="royal-gradient text-white p-4 sticky top-0 z-20 flex items-center gap-3 shadow-md border-b-2 border-amber-400">
+      <button onclick="showView('dashboard')" class="bg-white/20 hover:bg-white/30 px-3.5 py-2 rounded-xl text-sm font-black">⬅ वापस</button>
+      <h2 id="module-title" class="font-black text-base tracking-tight">मॉड्यूल</h2>
     </div>
     <div id="module-body" class="p-4"></div>
   </div>
@@ -497,4 +332,3 @@
   <script src="tools.js"></script>
 </body>
 </html>
-
